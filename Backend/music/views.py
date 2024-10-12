@@ -10,7 +10,20 @@ def index(request):
     return render(request, 'index.html')
 
 def login(request):
-    return render(request, 'login.html')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            auth_login(request, user)
+            return redirect('/')
+        else:
+            messages.info(request, "Invalid username or password")
+            return redirect('login')
+    else:
+        return render(request, 'login.html')
 
 def signup(request):
     if request.method == 'POST':
