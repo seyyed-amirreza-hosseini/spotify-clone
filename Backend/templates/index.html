@@ -18,9 +18,8 @@
         <!-- Welcome User -->
         <div class="sidebar-section">
             <span style="margin-left: 14px;" class="sidebar-link-icon">👤</span>
-            <b>Welcome, {{user.username}}</b>
-            <br>
-            <br>
+            <b>Welcome, {{ user.username }}</b>
+            <br><br>
 
             <a href="/logout">
                 <span class="sidebar-link-icon">↪️</span>
@@ -39,217 +38,58 @@
                 Search
             </a>
         </div>
-
     </div>
 
     <div style="margin-left:240px; padding:20px;">
         <header class="header-container">
             <form action="search" method="POST">
                 {% csrf_token %}
-
                 <div class="search-bar" style="width: 390px;">
                     <input type="search" name="search_query" placeholder="What do you want to listen to?" aria-label="Search">
-                    <button type="submit" aria-label="Search">
-                        🔍
-                    </button>
+                    <button type="submit" aria-label="Search">🔍</button>
                 </div>
             </form>
             <div class="search-title">Top Artists</div>
         </header>
 
-
         <main style="padding-top:20px;">
             <!-- Artist Card Section -->
-            <section style=" margin-top:0px; padding:0px; overflow-x:auto; white-space:nowrap;">
-                <div class="artist-card">
+            <section style="margin-top:0px; padding:0px; overflow-x:auto; white-space:nowrap;">
+                {% for artist in artists_data %}
+                <div class="artist-card" style="display:inline-block; text-align:center; margin-right:15px;">
                     <a href="#" style="text-decoration: none;">
-                        <img src="https://www.1zoom.me/big2/82/173719-avallonist.jpg" alt="Beyoncé" style="width:150px; height:150px; border-radius:50%;">
+                        <img src="{{ artist.image }}" alt="{{ artist.name }}" style="width:150px; height:150px; border-radius:50%;">
                         <div class="artist-info">
-                            <div class="artist-name">Beyoncé</div>
+                            <div class="artist-name">{{ artist.name }}</div>
                             <div class="artist-title">Artist</div>
                         </div>
                     </a>
                 </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Ed_Sheeran.jpg" alt="Ed Sheeran" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Ed Sheeran</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Taylor_Swift_%286966830273%29.jpg?20141124081306" alt="Taylor Swift" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Taylor Swift</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Drake_July_2016.jpg/699px-Drake_July_2016.jpg" alt="Drake" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Drake</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Adele_2016.jpg/800px-Adele_2016.jpg" alt="Adele" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Adele</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Rihanna_Diamonds_World_Tour_2013_%28Cropped%29.jpg/800px-Rihanna_Diamonds_World_Tour_2013_%28Cropped%29.jpg" alt="Rihanna" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Rihanna</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Post_Malone_Cropped.jpg/800px-Post_Malone_Cropped.jpg" alt="Post Malone" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Post Malone</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Jay-Z_2007.jpg/800px-Jay-Z_2007.jpg" alt="Jay-Z" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Jay-Z</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Eminem_Lollapalooza_2011.jpg/800px-Eminem_Lollapalooza_2011.jpg" alt="Eminem" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">Eminem</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="artist-card">
-                    <a href="#" style="text-decoration: none;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/The_Weeknd_in_2018.jpg/800px-The_Weeknd_in_2018.jpg" alt="The Weeknd" style="width:150px; height:150px; border-radius:50%;">
-                        <div class="artist-info">
-                            <div class="artist-name">The Weeknd</div>
-                            <div class="artist-title">Artist</div>
-                        </div>
-                    </a>
-                </div>
+                {% endfor %}
             </section>
 
             <!-- Top Songs Section -->
-            <div class="browse-all-title">Top Songs</div>
+            <div class="browse-all-title" style="margin-top:30px;">Top Songs</div>
 
-            <div class="browse-all">
-                <!-- Song Cards -->
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/e/e9/Beyonce_-_Single_Ladies_%28Put_a_Ring_on_It%29.png" alt="Single Ladies">
-                        <div class="category-title">Single Ladies - Beyoncé</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/4/45/Ed_Sheeran_-_Shape_of_You_%28Official_Single_Cover%29.png" alt="Shape of You">
-                        <div class="category-title">Shape of You - Ed Sheeran</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/f/f6/Taylor_Swift_-_Blank_Space.png" alt="Blank Space">
-                        <div class="category-title">Blank Space - Taylor Swift</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/2/28/Drake_-_Hotline_Bling.png" alt="Hotline Bling">
-                        <div class="category-title">Hotline Bling - Drake</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/7/7f/The_Weeknd_-_Blinding_Lights.png" alt="Blinding Lights">
-                        <div class="category-title">Blinding Lights - The Weeknd</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/1/19/Eminem_Lose_Yourself_cover.png" alt="Lose Yourself">
-                        <div class="category-title">Lose Yourself - Eminem</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/0/09/Justin_Bieber_-_Sorry.png" alt="Sorry">
-                        <div class="category-title">Sorry - Justin Bieber</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/f/f2/Lady_Gaga_-_Shallow.png" alt="Shallow">
-                        <div class="category-title">Shallow - Lady Gaga</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/5/5a/Maroon_5_Girls_Like_You.png" alt="Girls Like You">
-                        <div class="category-title">Girls Like You - Maroon 5</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/c/c2/Lizzo_-_Truth_Hurts.png" alt="Truth Hurts">
-                        <div class="category-title">Truth Hurts - Lizzo</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/d/d9/The_Chainsmokers_-_Closer.png" alt="Closer">
-                        <div class="category-title">Closer - The Chainsmokers</div>
-                    </a>
-                </div>
-
-                <div class="category-card">
-                    <a style="text-decoration: none; color: white;" href="#">
-                        <img src="https://upload.wikimedia.org/wikipedia/en/9/9e/Dua_Lipa_-_Levitating.png" alt="Levitating">
-                        <div class="category-title">Levitating - Dua Lipa</div>
-                    </a>
-                </div>
+            <div class="browse-all" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
+                {% for artist in artists_data %}
+                    {% for song in artist.songs %}
+                    <div class="category-card" style="text-align:center;">
+                        <a style="text-decoration: none; color: white;" href="#">
+                            <img src="{{ song.album_image }}" alt="{{ song.name }}" style="width: 150px; height: 150px;">
+                            <div class="category-title">{{ song.name }} - {{ artist.name }}</div>
+                        </a>
+                        {% if song.preview_url %}
+                        <audio controls style="width: 100%; margin-top: 10px;">
+                            <source src="{{ song.preview_url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        {% else %}
+                        <p style="color: #bbb;">No preview available</p>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% endfor %}
             </div>
         </main>
     </div>
