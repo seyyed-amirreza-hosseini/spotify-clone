@@ -1,14 +1,14 @@
-from django.core.cache import cache
 import json
 import time
+import base64
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from requests import post, get
 from decouple import config
-import base64
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
