@@ -1,4 +1,6 @@
+from django.core.cache import cache
 import json
+import time
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
@@ -7,9 +9,15 @@ from django.contrib.auth.decorators import login_required
 from requests import post, get
 from decouple import config
 import base64
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
+# Cache token for an hour (Spotify token expiration time)
 def get_token():
+    token = cache.get('spotify_token')
+    if token:
+        return token
+
     client_id = config('CLIENT_ID')
     client_secret = config('CLIENT_SECRET')
 
@@ -23,11 +31,14 @@ def get_token():
         "Content-Type": "application/x-www-form-urlencoded"
     }
     data = {"grant_type": "client_credentials"}
-    result = post(url, headers=headers, data=data)
+    result = post(url, headers=headers, data=data, timeout=10)
 
     json_result = json.loads(result.content)
     token = json_result["access_token"]
 
+    # Store token in cache for 1 hour (3600 seconds)
+    cache.set('spotify_token', token, timeout=3600) 
+    
     return token
 
 
@@ -53,49 +64,71 @@ def search_for_artist(token, artist_name):
 def get_songs_by_artist(token, artist_id):
     url = f"https://api.spotify.com/v1/artists/{artist_id}/top-tracks?country=US"
     headers = get_auth_header(token)
-    result = get(url, headers=headers)
+    result = get(url, headers=headers, timeout=10)
     json_result = json.loads(result.content)["tracks"]
     return json_result
+
+
+def fetch_artist_data(artist_name, token):
+    # Check if artist data is cached
+    cache_key = f'artist_data_{artist_name}'
+    cached_artist_data = cache.get(cache_key)
+    if cached_artist_data:
+        return cached_artist_data
+
+    # If not cached, fetch artist data
+    artist_result = search_for_artist(token, artist_name)
+    if artist_result:
+        artist_id = artist_result["id"]
+        artist_image = artist_result["images"][0]["url"] if artist_result["images"] else None
+        songs = get_songs_by_artist(token, artist_id)
+
+        artist_data = {
+            "name": artist_name,
+            "image": artist_image,
+            "songs": [
+                {
+                    "name": song["name"],
+                    "album_image": song["album"]["images"][0]["url"] if song["album"]["images"] else None
+                } for song in songs[:3]  # Limit to top 3 songs
+            ]
+        }
+
+        # Cache artist data for 1 hour (3600 seconds)
+        cache.set(cache_key, artist_data, timeout=3600)
+        
+        return artist_data
+
+    return None
+
 
 # Main view to fetch and display top artists and their songs
 @login_required(login_url='login')
 def index(request):
+    start = time.time()
+
     token = get_token()
-    
-    # Define a list of artist names you want to fetch
     artist_names = ["Beyoncé", "Ed Sheeran", "Taylor Swift", "Drake", "Adele", "ACDC"]
+
+    artists_data = []
     
-    artists_data = []  # Store artist and song details
+    # Use ThreadPoolExecutor to make requests in parallel
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        future_to_artist = {executor.submit(fetch_artist_data, artist_name, token): artist_name for artist_name in artist_names}
+        
+        for future in as_completed(future_to_artist):
+            artist_data = future.result()
+            if artist_data:
+                artists_data.append(artist_data)
+
+    context = {'artists_data': artists_data}
     
-    # Loop through each artist name, fetch their data and songs
-    for artist_name in artist_names:
-        artist_result = search_for_artist(token, artist_name)
-        if artist_result:
-            artist_id = artist_result["id"]
-            artist_image = artist_result["images"][0]["url"] if artist_result["images"] else None
-            songs = get_songs_by_artist(token, artist_id)
-            
-            # Store artist information with their top songs
-            artist_data = {
-                "name": artist_name,
-                "image": artist_image,
-                "songs": [
-                    {
-                        "name": song["name"],
-                        "album_image": song["album"]["images"][0]["url"] if song["album"]["images"] else None
-                    } for song in songs[:3]  # Get the top 3 songs
-                ]
-            }
-            artists_data.append(artist_data)
-        else:
-            print(f"Artist {artist_name} not found.")
-    
-    # Pass the data to the template for rendering
-    context = {
-        'artists_data': artists_data
-    }
-    
+    end = time.time()
+
+    total = end - start
+    print(total)
     return render(request, 'index.html', context)
+
 
 def login(request):
     if request.method == 'POST':
