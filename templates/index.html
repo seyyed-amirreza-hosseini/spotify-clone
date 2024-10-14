@@ -75,7 +75,7 @@
                 {% for artist in artists_data %}
                     {% for song in artist.songs %}
                     <div class="category-card" style="text-align:center;">
-                        <a style="text-decoration: none; color: white;" href="#">
+                        <a style="text-decoration: none; color: white;" href="/music/{{ song.name    }}">
                             <img src="{{ song.album_image }}" alt="{{ song.name }}" style="width: 150px; height: 150px;">
                             <div class="category-title">{{ song.name }} - {{ artist.name }}</div>
                         </a>

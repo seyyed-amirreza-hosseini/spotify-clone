@@ -108,7 +108,7 @@ def index(request):
     start = time.time()
 
     token = get_token()
-    artist_names = ["Beyoncé", "Ed Sheeran", "Taylor Swift", "Drake", "Adele", "ACDC"]
+    artist_names = ['The Weeknd', 'Taylor Swift', 'Bad Bunny', 'Ed Sheeran', 'Ariana Grande', 'Billie Eilish', 'Drake', 'Justin Bieber', 'Eminem', 'BTS', 'Rihanna', 'Shakira', 'SZA', 'Kanye West', 'Travis Scott', 'Dua Lipa', 'Calvin Harris', 'Kendrick Lamar', 'Maroon 5', 'Adele', 'Lana Del Rey', 'Imagine Dragons', 'Karol G', 'Linkin Park', 'Katy Perry', 'Marshmello', 'Future', 'J Balvin', 'Sia', 'Miley Cyrus']
 
     artists_data = []
     
@@ -179,3 +179,7 @@ def signup(request):
 def logout(request):
     auth_logout(request)
     return redirect('login')
+
+
+def music(request, pk):
+    return render(request, 'music.html')
